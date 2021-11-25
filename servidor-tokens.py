@@ -33,11 +33,29 @@ def crear():
 @app.route("/validar-token")
 def validar():
     token = request.args.get("token")
+    rol = request.args.get("rol")
     try:
         secret_key = os.environ.get("JWT_SECRET_KEY")
-        jwt.decode(token, secret_key, algorithms=['HS256'])
+        token = jwt.decode(token, secret_key, algorithms=['HS256'])
+        print(token)
+        if token["rol"] == rol:
+            return "OK"
+        else:
+            return "KO"
+    except Exception as e:
+        return ""
+    
+    
+@app.route("/verificar-token")
+def verificar():
+    token = request.args.get("token")
+    try:
+        secret_key = os.environ.get("JWT_SECRET_KEY")
+        token = jwt.decode(token, secret_key, algorithms=['HS256'])
+        print(token)
         return "OK"
     except Exception as e:
         return "KO"
+    
 if __name__ == '__main__':
     app.run(host="localhost", port=5001)
